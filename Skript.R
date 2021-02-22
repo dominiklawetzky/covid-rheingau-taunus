@@ -1,12 +1,11 @@
 ##### Einlesen / Aufbereiten -----
 
-setwd("/Users/dominiklawetzky/Desktop/COVID")
+setwd("/Users/dominiklawetzky/Documents/GitHub/covid-rheingau-taunus")
 
 library(ggplot2)
 library(dplyr)
 library(jsonlite)
 library(downloader)
-
 
 install.packages("tibble")
 library(RJSONIO)
@@ -17,23 +16,17 @@ url <- "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_C
 options(timeout=200)
 download.file(url = url, destfile = "Data.json")
 
-test <- fromJSON(url)
+# Versuch 1
 
 test <- as.data.frame(jsonlite::fromJSON("Data.json"))
 
-test <- jsonlite::fromJSON("Data.json")
+# Versuch 2
 
 test <- stream_in(file("Data.json"))
 test2 <- as_tibble("Data.json")
 
-as.data.frame(test)
 
-geojson_read("Data.GeoJSON", parse = TRUE)
-
-?geojson_read
-read_G
-
-?FROM_GeoJson
+# Ohne API
 
 covid_data <- read.csv("RKI_COVID19.csv")
 
@@ -77,6 +70,9 @@ alterstruktur = ggplot(data = covid_hessen_rheingau_taunus_ALTER_AG,
     caption = as.Date(Sys.time())) +
     theme(plot.title = element_text(color = "black", face = "bold", size = 16, hjust = .5),
     plot.subtitle = element_text(color = "darkgrey", size = 12, hjust = .5))
+
+ggsave("alterstruktur.jpg",
+       plot = alterstruktur)
 
 alterstruktur
 
@@ -129,7 +125,7 @@ faelle <- faelle + scale_x_date(limits = c(min, max))
 
 ggsave("faelle.jpg", 
        plot = faelle_abschnitt,
-       width = 20,
+       width = 12,
        height = 5,
        limitsize = FALSE)
 
@@ -169,6 +165,6 @@ faelle_smooth <- faelle_smooth + scale_x_date(limits = c(min, max))
 
 ggsave("faelle_smooth.jpg", 
        plot = faelle_smooth,
-       width = 20,
+       width = 12,
        height = 5,
        limitsize = FALSE)

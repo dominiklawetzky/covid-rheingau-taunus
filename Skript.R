@@ -26,7 +26,6 @@ glimpse(json_data)
 test <- as.data.frame(json_data$features)
 
 
-
 # Versuch 2
 
 test <- stream_in(file("Data.json"))

@@ -18,7 +18,14 @@ download.file(url = url, destfile = "Data.json")
 
 # Versuch 1
 
-test <- as.data.frame(jsonlite::fromJSON("Data.json"))
+json_data <- jsonlite::fromJSON("Data.json")
+
+json_data <- json_data %>% as_tibble()
+glimpse(json_data)
+
+test <- as.data.frame(json_data$features)
+
+
 
 # Versuch 2
 

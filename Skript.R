@@ -45,8 +45,6 @@ covid_hessen_wiesbaden <- subset(covid_data, Landkreis=="SK Wiesbaden")
 
 covid_hessen_rheingau_taunus <- subset(covid_data, Landkreis=="LK Rheingau-Taunus-Kreis")
 
-plot(covid_hessen_rheingau_taunus$Meldedatum, covid_hessen_rheingau_taunus$AnzahlFall)
-
 covid_hessen_rheingau_taunus_FALL <- data.frame(Meldedatum = covid_hessen_rheingau_taunus$Meldedatum, 
                                                 Fallzahl = covid_hessen_rheingau_taunus$AnzahlFall)
 
@@ -65,9 +63,6 @@ covid_hessen_rheingau_taunus_ALTER_AG <- data.frame(Altersgruppen = covid_hessen
 
 barplot(covid_hessen_rheingau_taunus_ALTER_AG$Gesamtanzahl ~ covid_hessen_rheingau_taunus_ALTER_AG$Altersgruppen)
 
-p<-ggplot(data=df, aes(x=dose, y=len)) +
-  geom_bar(stat="identity")
-
 alterstruktur = ggplot(data = covid_hessen_rheingau_taunus_ALTER_AG, 
                        aes(x = Altersgruppen, y = Gesamtanzahl)) +
     geom_bar(stat="identity", fill = "steelblue") +
@@ -81,7 +76,6 @@ ggsave("alterstruktur.jpg",
        plot = alterstruktur)
 
 alterstruktur
-
 
 ##### Kumulierte Fallzahl -----
 

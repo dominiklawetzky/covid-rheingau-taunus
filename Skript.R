@@ -6,8 +6,6 @@ library(ggplot2)
 library(dplyr)
 library(jsonlite)
 library(downloader)
-
-install.packages("tibble")
 library(RJSONIO)
 
 url <- "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?where=1%3D1&outFields=Bundesland,Landkreis,Altersgruppe,Geschlecht,AnzahlFall,AnzahlTodesfall,Meldedatum,Datenstand,NeuerFall,NeuerTodesfall,NeuGenesen,AnzahlGenesen&outSR=4326&f=json"
@@ -33,6 +31,8 @@ test2 <- as_tibble("Data.json")
 
 
 # Ohne API
+
+# Download-URL: https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0
 
 covid_data <- read.csv("RKI_COVID19.csv")
 
@@ -116,12 +116,11 @@ faelle = ggplot() +
         axis.title.y.right = element_text(vjust = 2),
         legend.position = "bottom")
 
-faelle
-
-min <- as.Date("2021-02-1")
+min <- as.Date("2020-03-1")
 max <- NA
 
 faelle <- faelle + scale_x_date(limits = c(min, max))
+faelle
 
 ggsave("faelle.jpg", 
        plot = faelle_abschnitt,
@@ -129,7 +128,7 @@ ggsave("faelle.jpg",
        height = 5,
        limitsize = FALSE)
 
-###### Fallzahlen geglättet -----
+##### Fallzahlen geglättet -----
 
 coeff <- .05
 
@@ -156,15 +155,24 @@ faelle_smooth = ggplot() +
         axis.title.y.right = element_text(vjust = 2),
         legend.position = "bottom")
 
-faelle_smooth
-
-min <- as.Date("2021-02-1")
+min <- as.Date("2020-03-1")
 max <- NA
 
 faelle_smooth <- faelle_smooth + scale_x_date(limits = c(min, max))
+faelle_smooth
 
 ggsave("faelle_smooth.jpg", 
        plot = faelle_smooth,
        width = 12,
        height = 5,
        limitsize = FALSE)
+
+
+##### Geschlechterstruktur -----
+
+##### Inzidenzwert -----
+
+##### Fallzahlenvergleich mit Wiesbaden -----
+
+covid_hessen_rheingau_taunus_FALL_AG[226,3]
+covid_hessen_rheingau_taunus_FALL_AG[281,3]

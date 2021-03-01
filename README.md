@@ -3,4 +3,5 @@ Auf dem Weg zu einer [Shiny-App](https://shiny.rstudio.com), um die relevanten S
 
 **Eine vorbildliche Dokumentation folgt, sobald ich Zeit dafür finde.**
 
+Der Code ist *free and open*. 
 Wer mithelfen will, kann eine *Pull request* einreichen, oder mich unter [info(at)dominiklawetzky(dot)de](mailto:info@dominiklawetzky.de) kontaktieren.

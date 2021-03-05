@@ -43,3 +43,18 @@ agg_alter_tab <- as.data.frame(agg_alter_tab)
 agg_alter_tab$date <- as.Date(agg_alter_tab$date)
 
 
+agg_alter_rel <- prop.table(table(agg_alter))
+agg_alter_rel <- as.data.frame(agg_alter_rel)
+agg_alter_rel$date <- as.Date(agg_alter_rel$date)
+
+##### Todesfälle -----
+
+agg_tote <- aggregate.data.frame(data_rtk$attributes$AnzahlTodesfall, 
+                                   by = list(data_rtk$attributes$Meldedatum), 
+                                   FUN = sum) # Aggregation der Neuen Todesfälle
+
+agg_tote <- data.frame(Date = agg_tote$Group.1,
+                       NewDeaths = agg_tote$x) # Variablenbeschriftung hinzufügen
+
+kum_tote <- data.frame(Date = agg_tote$Date,
+                         CumDeaths = cumsum(agg_tote$NewDeath)) # Kumulierte Todesfälle

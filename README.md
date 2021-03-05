@@ -13,8 +13,9 @@ Wer mithelfen will, kann eine *Pull request* einreichen, oder mich unter [info(a
 ## v0.2 (Beta)
 - Daten laden automatisch über die ArcGIS-Schnittstelle des RKI
 - Daten werden effizienter geladen (nur Rheingau-Taunus-Kreis)
-- ggplot-Implementierung (neue Fälle, kumulierte Fälle, Alterstruktur)
+- ggplot-Implementierung (neue Fälle, kumulierte Fälle, Alterstruktur, Todesfälle)
+- geglätte Plots (verschiedene Glättungsmethoden)
 - Regler zur Auswahl von Betrachtungszeitraum und Skalierung der y-Achse bei neuen Fällen
 - einige Erklärungen hinzugefügt (RKI-Schnittstelle, Download der Plots)
 
-**Was noch kommt:** Anzeige des Betrachtungszeitraums in den Plots, einfacher Download-Button, viele weitere mögliche Plots (z. B. Tote, Geschlechterverteilung)
+**Was noch kommt:** Anzeige des Betrachtungszeitraums in den Plots, einfacher Download-Button, viele weitere mögliche Plots (z. B. Geschlechterverteilung), Möglichkeit zum Vergleich zweier Betrachtungszeiträume

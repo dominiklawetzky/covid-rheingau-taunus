@@ -10,6 +10,8 @@ Wer mithelfen will, kann eine *Pull request* einreichen, oder mich unter [info(a
 
 # Versionhistorie
 
+Vier-Wochen-Vergleich ist noch nicht _live_. Bisher nur auf Desktops sinnvoll nutzbar.
+
 ## v0.2 (Beta)
 - Daten laden automatisch über die ArcGIS-Schnittstelle des RKI
 - Daten werden effizienter geladen (nur Rheingau-Taunus-Kreis)

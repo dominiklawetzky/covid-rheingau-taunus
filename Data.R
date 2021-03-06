@@ -58,3 +58,6 @@ agg_tote <- data.frame(Date = agg_tote$Group.1,
 
 kum_tote <- data.frame(Date = agg_tote$Date,
                          CumDeaths = cumsum(agg_tote$NewDeath)) # Kumulierte Todesfälle
+
+
+

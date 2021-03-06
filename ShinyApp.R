@@ -45,7 +45,12 @@ ui <- fluidPage(
       tabsetPanel(type = "tabs",
                   
                   tabPanel("Infektionszahlen", 
+                           h3("Infektionsverlauf"),
                            plotOutput("cases",
+                                      width = "100%"),
+                           h3("Vier-Wochen-Vergleich"),
+                           p("verwendet das Ende des Betrachtungszeitraums als Endzeitpunkt"),
+                           plotOutput("comp",
                                       width = "100%")),
                   
                   tabPanel("Altersstruktur", 
@@ -106,10 +111,7 @@ output$cases <- renderPlot({
               size = 1) +
     scale_y_continuous(name = "Kumuliert",
                        sec.axis = sec_axis(~.*coeff, name = "Neue Fälle")) +
-    labs(title = "Verlauf der Sars-CoV-2-Infektionen",
-         subtitle = "Rheingau-Taunus-Kreis",
-         caption = "COVID-Panel Rheingau-Taunus",
-         color = "Legende") +
+    labs(color = "Legende") +
     scale_color_manual(name = "Legende",
                        values = c("Kumulierte Fallzahl" = "steelblue", "Neue Fälle" = "pink")) +
     theme(plot.title = element_text(color = "black", face = "bold", size = 20, hjust = .5),
@@ -296,6 +298,113 @@ output$deaths <- renderPlot({
   if(input$smooth == 1){print(plot3_gl)}
   else {print(plot3)}
   
+})
+  
+# Sieben-Tages-Vergleich
+  
+  output$comp <- renderPlot({
+    
+  today <- as.Date(input$date[2], "%Y-%m-%d")
+  sevendays <- as.Date(input$date[2]-7, "%Y-%m-%d")
+  fourteendays <- as.Date(input$date[2]-14, "%Y-%m-%d")
+  twentyonedays <- as.Date(input$date[2]-21, "%Y-%m-%d")
+  twentyeightdays <- as.Date(input$date[2]-28, "%Y-%m-%d")
+  
+  agg_faelle$Date <- as.Date(agg_faelle$Date)
+  currentweek_sum <- sum(filter(agg_faelle, Date >= as.Date(sevendays), Date <= as.Date(today))$NewCases)
+  lastweek_sum <- sum(filter(agg_faelle, Date >= as.Date(fourteendays), Date <= as.Date(sevendays))$NewCases)
+  
+  
+  currentweek <- filter(agg_faelle, Date >= as.Date(sevendays), Date <= as.Date(today))
+  
+  lastweek <- filter(agg_faelle, Date >= as.Date(fourteendays), Date < as.Date(sevendays))
+  
+  lastlastweek <- filter(agg_faelle, Date >= as.Date(twentyonedays), Date < as.Date(fourteendays))
+  
+  lastlastlastweek <- filter(agg_faelle, Date >= as.Date(twentyeightdays), Date < as.Date(twentyonedays))
+  
+  together <- c(currentweek$NewCases, lastweek$NewCases, lastlastweek$NewCases, lastlastlastweek$NewCases)
+  together_mean <- mean(together)
+  
+  layout.matrix <- matrix(c(1, 5, 9, 2, 6, 10, 3, 7, 11, 4, 8, 12), ncol = 4, nrow = 3)
+  layout(mat = layout.matrix,
+         heights = c(5.5, 3, 3), # Heights of the two rows
+         widths = c(1)) # Widths of the two columns
+  layout.show(12)
+  
+  
+  boxplot(lastlastlastweek$NewCases,
+          main = paste(twentyeightdays, "bis", twentyonedays),
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(min(together), max(together)+5),
+          col = "lightblue")
+  boxplot(lastlastweek$NewCases,
+          main = paste(twentyonedays, "bis", fourteendays),
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(min(together), max(together)+5),
+          col = "lightblue")
+  boxplot(lastweek$NewCases,
+          main = paste(fourteendays, "bis", sevendays),
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(min(together), max(together)+5),
+          col = "lightblue")
+  boxplot(currentweek$NewCases,
+          main = paste(sevendays, "bis", today),
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(min(together), max(together)+5),
+          col = "lightblue")
+  
+  boxplot(mean(lastlastlastweek$NewCases),
+          horizontal = FALSE,
+          main = "Sieben-Tage-Mittelwert",
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(together_mean-(together_mean/2),together_mean+(together_mean/2)))
+  boxplot(mean(lastlastweek$NewCases),
+          horizontal = FALSE,
+          main = "Sieben-Tage-Mittelwert",
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(together_mean-(together_mean/2),together_mean+(together_mean/2)))
+  boxplot(mean(lastweek$NewCases),
+          horizontal = FALSE,
+          main = "Sieben-Tage-Mittelwert",
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(together_mean-(together_mean/2),together_mean+(together_mean/2)))
+  boxplot(mean(currentweek$NewCases),
+          horizontal = FALSE,
+          main = "Sieben-Tage-Mittelwert",
+          ylab = "Gemeldete Fälle / Tag",
+          ylim = c(together_mean-(together_mean/2),together_mean+(together_mean/2)))
+  
+  plot(lastlastlastweek$NewCases,
+       type = "h",
+       main = "Sieben-Tage-Verlauf",
+       ylab = "Gemeldete Fälle / Tag",
+       xlab = "Tage",
+       ylim = c(min(lastlastlastweek$NewCases), max(lastlastlastweek$NewCases)+5),
+       col = "black")
+  plot(lastlastweek$NewCases,
+       type = "h",
+       main = "Sieben-Tage-Verlauf",
+       ylab = "Gemeldete Fälle / Tag",
+       xlab = "Tage",
+       ylim = c(min(lastlastweek$NewCases), max(lastlastweek$NewCases)+5),
+       col = "black")
+  plot(lastweek$NewCases,
+       type = "h",
+       main = "Sieben-Tage-Verlauf",
+       ylab = "Gemeldete Fälle / Tag",
+       xlab = "Tage",
+       ylim = c(min(lastweek$NewCases), max(lastweek$NewCases)+5),
+       col = "black")
+  plot(currentweek$NewCases,
+       type = "h",
+       main = "Sieben-Tage-Verlauf",
+       ylab = "Gemeldete Fälle / Tag",
+       xlab = "Tage",
+       ylim = c(min(currentweek$NewCases), max(currentweek$NewCases)+5),
+       col = "black")
+  
+
 })
 
 

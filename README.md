@@ -8,6 +8,8 @@ Wer mithelfen will, kann eine *Pull request* einreichen, oder mich unter [info(a
 
 [**Zur ersten funktionstüchtigen Version**](https://dominiklawetzky.shinyapps.io/covid-rheingau-taunus/)
 
+**Wichtig: Potentielles Bug bei der Aufbereitung der Altersstrukturdaten. Bitte mit Vorsicht genießene.**
+
 # Versionhistorie
 
 Vier-Wochen-Vergleich ist noch nicht _live_. Bisher nur auf Desktops sinnvoll nutzbar.

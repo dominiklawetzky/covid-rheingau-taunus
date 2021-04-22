@@ -59,12 +59,12 @@ ui <- fluidPage(
                            
                            br(),
                            
-                           plotOutput("age_rel",
-                                      width = "100%"),
-                           br(),
-                           
-                           tableOutput("age_table")),
+                           plotOutput("age_line"),
                   
+                           br(),
+                  
+                           plotOutput("age_line2")),
+                            
                   
                   tabPanel("Todeszahlen", 
                            plotOutput("deaths",
@@ -90,11 +90,11 @@ ui <- fluidPage(
 
 ##### Server Logic ------
 server <- function(input, output, session) {
-  
 
-# Fallzahlen
+
+  # Fallzahlen
   
-output$cases <- renderPlot({
+  output$cases <- renderPlot({
 
     coeff <- input$scale
     
@@ -113,15 +113,9 @@ output$cases <- renderPlot({
                        sec.axis = sec_axis(~.*coeff, name = "Neue Fälle")) +
     labs(color = "Legende") +
     scale_color_manual(name = "Legende",
-                       values = c("Kumulierte Fallzahl" = "steelblue", "Neue Fälle" = "pink")) +
-    theme(plot.title = element_text(color = "black", face = "bold", size = 20, hjust = .5),
-          plot.subtitle = element_text(color = "darkgrey", size = 14, hjust = .5),
-          axis.text.x = element_text(vjust = .5, hjust = .5),
-          axis.title.x = element_text(vjust = -3),
-          axis.title.y.left = element_text(vjust = 2),
-          axis.title.y.right = element_text(vjust = 2),
-          legend.position = "bottom") +
-  scale_x_date(limits = c(min, max))
+                       values = c("Kumulierte Fallzahl" = "#E69F00", "Neue Fälle" = "#56B4E9")) +
+    theme_light() +
+    scale_x_date(limits = c(min, max))
     
     
     plot1_gl <- ggplot() +
@@ -139,13 +133,7 @@ output$cases <- renderPlot({
            color = "Legende") +
       scale_color_manual(name = "Legende",
                          values = c("Kumulierte Fallzahl" = "steelblue", "Neue Fälle" = "pink")) +
-      theme(plot.title = element_text(color = "black", face = "bold", size = 20, hjust = .5),
-            plot.subtitle = element_text(color = "darkgrey", size = 14, hjust = .5),
-            axis.text.x = element_text(vjust = .5, hjust = .5),
-            axis.title.x = element_text(vjust = -3),
-            axis.title.y.left = element_text(vjust = 2),
-            axis.title.y.right = element_text(vjust = 2),
-            legend.position = "bottom") +
+      theme_light()+
       scale_x_date(limits = c(min, max))
   
   if(input$smooth == 1){print(plot1_gl)}
@@ -154,7 +142,7 @@ output$cases <- renderPlot({
    })
 
 
-# Altersstatistik (absolut)
+# Altersstatistik 1
 
 output$age <- renderPlot({
 
@@ -162,78 +150,77 @@ output$age <- renderPlot({
   min <- as.Date(input$date[1], "%Y-%m-%d")
   max <- as.Date(input$date[2], "%Y-%m-%d")
   
-  altersdaten1 <- filter(agg_alter_tab, date >= as.Date(min), date <= as.Date(max))
+  altersdaten1 <- filter(agg_alter, date >= as.Date(min) & date <= as.Date(max))
   
   plot2 = ggplot(data = altersdaten1, 
-                 aes(x = age, y = Freq)) +
-    geom_bar(stat="identity", fill = "steelblue") +
-    labs(title = "Altersstruktur (absolute Häufigkeit)",
-         subtitle = "Sars-CoV-2-Infektionen im Rheingau-Taunus-Kreis",
+                 aes(x = date, y = cases, fill = as.factor(age))) +
+    geom_bar(stat = "identity") +
+    labs(title = "Altersstruktur der täglichen Neuinfektionen",
+         subtitle = "Rheingau-Taunus-Kreis",
          caption = "COVID-Panel Rheingau-Taunus") +
-    theme(plot.title = element_text(color = "black", face = "bold", size = 20, hjust = .5),
-          plot.subtitle = element_text(color = "darkgrey", size = 14, hjust = .5),
-          axis.text.x = element_text(vjust = .5, hjust = .5),
-          axis.title.x = element_text(vjust = -3),
-          axis.title.y.left = element_text(vjust = 2),
-          axis.title.y.right = element_text(vjust = 2)) +
-    xlab("Altersgruppen") +
-    ylab("absolute Häufigkeit")
+    scale_fill_discrete(name = "Altersgruppe") +
+    theme_light()+
+    xlab("Meldedatum") +
+    ylab("Neue Fälle")
   
   print(plot2)
   
 })
     
 
-# Altersstatistik (relativ)
 
-output$age_rel <- renderPlot({
+# Altersstatistik 2
+
+output$age_line <- renderPlot({
   
   
   min <- as.Date(input$date[1], "%Y-%m-%d")
   max <- as.Date(input$date[2], "%Y-%m-%d")
   
-  altersdaten2 <- filter(agg_alter, date >= as.Date(min), date <= as.Date(max))
-  altersdaten2 <- prop.table(table(altersdaten2))
-  altersdaten2 <- as.data.frame(altersdaten2)
+  agg_alter3 <- filter(agg_alter3, Group.1 >= as.Date(min) & Group.1 <= as.Date(max))
+  # aggregate.data.frame(cbind(age, cases), data = agg_alter, FUN = sum)
   
-  plot3 = ggplot(data = altersdaten2, 
-                 aes(x = age, y = Freq)) +
-    geom_bar(stat="identity", fill = "steelblue") +
-    labs(title = "Altersstruktur (relative Häufigkeit)",
-         subtitle = "Sars-CoV-2-Infektionen im Rheingau-Taunus-Kreis",
+  plot3 = ggplot(data = agg_alter3,
+                 aes(x = Group.1, y = x, color = as.factor(Group.2))) +
+    geom_line() +
+    labs(title = "Tägliche Neuinfektionen nach Alter",
+         subtitle = "Rheingau-Taunus-Kreis",
          caption = "COVID-Panel Rheingau-Taunus") +
-    theme(plot.title = element_text(color = "black", face = "bold", size = 20, hjust = .5),
-          plot.subtitle = element_text(color = "darkgrey", size = 14, hjust = .5),
-          axis.text.x = element_text(vjust = .5, hjust = .5),
-          axis.title.x = element_text(vjust = -3),
-          axis.title.y.left = element_text(vjust = 2),
-          axis.title.y.right = element_text(vjust = 2)) +
-    xlab("Altersgruppen") +
-    ylab("relative Häufigkeit")
+    scale_color_discrete(name = "Altersgruppe") +
+    theme_light() +
+    xlab("Meldedatum") +
+    ylab("Neue Fälle")
   
   print(plot3)
   
 })
 
+# Altersstatistik 3
 
-# Tabelle
-
-output$age_table <- renderTable({
+output$age_line2 <- renderPlot({
   
   min <- as.Date(input$date[1], "%Y-%m-%d")
   max <- as.Date(input$date[2], "%Y-%m-%d")
   
-  altersdaten3 <- filter(agg_alter, date >= as.Date(min), date <= as.Date(max))
-  altersdaten3 <- prop.table(table(altersdaten3))
-  altersdaten3 <- as.data.frame(altersdaten3)
-  altersdaten3 <- aggregate.data.frame(altersdaten3$Freq, by = list(altersdaten3$age), FUN = sum)
-  altersdaten3$x <-label_percent()(altersdaten3$x)
-  colnames(altersdaten3) <- c("Altersgruppe","Prozentuale Häufigkeit")
-  print(altersdaten3)
-  
+ agg_alter3 <- filter(agg_alter3, Group.1 >= as.Date(min) & Group.1 <= as.Date(max))
 
-  
+plot4 = ggplot(data = agg_alter3,
+               aes(x = Group.1, y = x)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  labs(title = "Tägliche Neuinfektionen nach Alter mit LOESS-Glättung",
+       subtitle = "Rheingau-Taunus-Kreis",
+       caption = "COVID-Panel Rheingau-Taunus") +
+  scale_color_discrete(name = "Altersgruppe") +
+  theme_light() +
+  xlab("Meldedatum") +
+  ylab("Neue Fälle") +
+  facet_wrap(~Group.2)
+
+print(plot4)
+
 })
+
 
 
 # Todesfälle
@@ -246,7 +233,7 @@ output$deaths <- renderPlot({
   max <- as.Date(input$date[2], "%Y-%m-%d")
   
   
-  plot3 <- ggplot() +
+  plot5 <- ggplot() +
     geom_line(data = kum_tote, 
               aes(x = Date, y = CumDeaths, color = "Kumulierte Todesfälle"),
               size = 1) +
@@ -270,7 +257,7 @@ output$deaths <- renderPlot({
           legend.position = "bottom") +
     scale_x_date(limits = c(min, max))
   
-  plot3_gl <- ggplot() +
+  plot5_gl <- ggplot() +
     geom_smooth(data = kum_tote, method = input$smoothMethod, 
               aes(x = Date, y = CumDeaths, color = "Kumulierte Todesfälle"),
               size = 1) +
@@ -295,14 +282,17 @@ output$deaths <- renderPlot({
     scale_x_date(limits = c(min, max))
 
   
-  if(input$smooth == 1){print(plot3_gl)}
-  else {print(plot3)}
+  if(input$smooth == 1){print(plot5_gl)}
+  else {print(plot5)}
   
 })
   
 # Sieben-Tages-Vergleich
   
   output$comp <- renderPlot({
+    
+  blue <- "#56B4E9"
+  yellow <- "#E69F00"
     
   today <- as.Date(input$date[2], "%Y-%m-%d")
   sevendays <- as.Date(input$date[2]-7, "%Y-%m-%d")
@@ -331,28 +321,24 @@ output$deaths <- renderPlot({
          heights = c(5.5, 3, 3), # Heights of the two rows
          widths = c(1)) # Widths of the two columns
   layout.show(12)
-  
+
   
   boxplot(lastlastlastweek$NewCases,
           main = paste(twentyeightdays, "bis", twentyonedays),
           ylab = "Gemeldete Fälle / Tag",
-          ylim = c(min(together), max(together)+5),
-          col = "lightblue")
+          ylim = c(min(together), max(together)+5))
   boxplot(lastlastweek$NewCases,
           main = paste(twentyonedays, "bis", fourteendays),
           ylab = "Gemeldete Fälle / Tag",
-          ylim = c(min(together), max(together)+5),
-          col = "lightblue")
+          ylim = c(min(together), max(together)+5))
   boxplot(lastweek$NewCases,
           main = paste(fourteendays, "bis", sevendays),
           ylab = "Gemeldete Fälle / Tag",
-          ylim = c(min(together), max(together)+5),
-          col = "lightblue")
+          ylim = c(min(together), max(together)+5))
   boxplot(currentweek$NewCases,
           main = paste(sevendays, "bis", today),
           ylab = "Gemeldete Fälle / Tag",
-          ylim = c(min(together), max(together)+5),
-          col = "lightblue")
+          ylim = c(min(together), max(together)+5))
   
   boxplot(mean(lastlastlastweek$NewCases),
           horizontal = FALSE,

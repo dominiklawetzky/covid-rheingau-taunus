@@ -1,4 +1,4 @@
-rm(list = ls())
+
 
 ##### API-Zugriff -----
 
@@ -36,6 +36,18 @@ kum_faelle <- data.frame(Date = agg_faelle$Date,
 agg_alter <- data.frame(date = data_rtk$attributes$Meldedatum,
                         age = data_rtk$attributes$Altersgruppe,
                         cases = data_rtk$attributes$AnzahlFall)
+
+agg_alter2 <- aggregate.data.frame(x = data_rtk$attributes$AnzahlFall,
+                                 by = list(Group.date = data_rtk$attributes$Meldedatum), 
+                                 FUN = sum)
+
+agg_alter3 <- aggregate.data.frame(data_rtk$attributes$AnzahlFall,
+                     by = list(data_rtk$attributes$Meldedatum, data_rtk$attributes$Altersgruppe), 
+                     FUN = sum)
+
+
+
+?aggregate.data.frame
 
 agg_alter_tab <- table(agg_alter)
 

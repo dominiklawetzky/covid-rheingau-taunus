@@ -1,0 +1,13 @@
+name: covid-rheingau-taunus
+title: covid-rheingau-taunus
+username:
+account: dominiklawetzky
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3721694
+bundleId: 4504558
+url: https://dominiklawetzky.shinyapps.io/covid-rheingau-taunus/
+when: 1619092728.70763
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|Data.json|README.md|Skript.R

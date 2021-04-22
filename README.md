@@ -14,6 +14,12 @@ Wer mithelfen will, kann eine *Pull request* einreichen, oder mich unter [info(a
 
 Vier-Wochen-Vergleich ist noch nicht _live_. Bisher nur auf Desktops sinnvoll nutzbar.
 
+## v0.3 (Beta, 2021-04-22)
+- Fehler bei der Aggregation der Altersdaten behoben
+- Verbesserung der Darstellung des Plots zu Neuinfektionen/kumulierte Fallzahl im Reiter _Infektionszahlen_
+- Überarbeitung der Plots im Reiter _Altersstruktur_
+- Plots zum Vier-Wochen-Vergleich der Infektionsdynamik im Reiter _Infektionszahlen_
+
 ## v0.2 (Beta)
 - Daten laden automatisch über die ArcGIS-Schnittstelle des RKI
 - Daten werden effizienter geladen (nur Rheingau-Taunus-Kreis)

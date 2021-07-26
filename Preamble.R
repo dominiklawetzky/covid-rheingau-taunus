@@ -1,16 +1,20 @@
 ##### Preamble -----
 
 # Working Directory
-setwd("/Users/dominiklawetzky/Documents/GitHub/covid-rheingau-taunus")
+#setwd("/Users/dominiklawetzky/Documents/GitHub/covid-rheingau-taunus")
 
-# Package names
-packages <- c("ggplot2", "readxl", "dplyr", "tidyr", "knitr", "car", "psych", "lmtest", "ggpubr", "ggstatsplot", "jsonlite", "pander", "abind", "RColorBrewer", "rococo", "shiny")
+## PACKAGE NAMEN
+packages <- c("ggplot2", "readxl", "dplyr", "tidyr","psych", "tidyverse", "ggpubr", "ggstatsplot", "jsonlite", "RColorBrewer","shiny")
 
-# Install packages not yet installed
+
+
+## PACKETE INSTALLIEREN, WENN NICHT INSTALLIERT
 installed_packages <- packages %in% rownames(installed.packages())
 if (any(installed_packages == FALSE)) {
   install.packages(packages[!installed_packages])
 }
 
-# Packages loading
+
+
+## PAKETE LADEN
 invisible(lapply(packages, library, character.only = TRUE))

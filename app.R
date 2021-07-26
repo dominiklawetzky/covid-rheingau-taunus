@@ -1,6 +1,6 @@
-# source("Preamble.R", local = TRUE)
+# source("preamble.R", local = TRUE)
 
-source("Data.R", local = TRUE)
+source("data.R", local = TRUE)
 
 library(shiny)
 library(ggplot2)
@@ -86,7 +86,7 @@ ui <- fluidPage(
   )
 )
   
-
+?tabsetPanel
 
 ##### Server Logic ------
 server <- function(input, output, session) {

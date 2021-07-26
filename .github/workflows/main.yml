@@ -1,0 +1,18 @@
+on: [push]
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: deploy file
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
+        with:
+          username: 'dominik'
+          server: 'shiny.dominiklawetzky.de'
+          ssh_private_key: ${{ secrets.SSH }} 
+          local_path: './*'
+          remote_path: '/srv/shiny-server/covid-rheingau-taunus'
+          args: '-o ConnectTimeout=5'
